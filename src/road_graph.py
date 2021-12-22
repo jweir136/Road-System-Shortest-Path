@@ -2,7 +2,7 @@ import csv
 
 class RoadwayGraph:
     def __init__(self, csv_filepath: str):
-        self.adjDict: dict(str, list(Edge)) = {}
+        self.adjDict = {}
         self.coords = {}
 
         with open(csv_filepath, 'r') as csvfile:
@@ -96,7 +96,3 @@ class RoadwayGraph:
             closed_list.add(n)
         
         return None
-
-if __name__ == "__main__":
-    r = RoadwayGraph("test-data/Karachi/Karachi_Edgelist.csv")
-    print(r.shortest_path('1', '992'))
