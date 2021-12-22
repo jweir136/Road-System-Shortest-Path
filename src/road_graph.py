@@ -1,22 +1,24 @@
 import csv
+from pyrosm import OSM, get_data
+
 
 class RoadwayGraph:
-    def __init__(self, csv_filepath: str):
+    def __init__(self, data):
         self.adjDict = {}
-        self.coords = {}
 
-        with open(csv_filepath, 'r') as csvfile:
-            datareader = csv.reader(csvfile)
-            for row in datareader:
-                x, y, start, end, node_id, distance = row
+        for row in data:
+            _, _, _, _, lanes, _, maxspeed, name, oneway, _, _, _, _, _, _, _, _, _, start, end, distance = row
 
-                if not start in self.adjDict:
-                    self.adjDict[start] = [(end, float(distance))]
+            if not start in self.adjDict:
+                self.adjDict[start] = [(end, float(distance))]
+            else:
+                self.adjDict[start].append((end, float(distance)))
+
+            if oneway != 'yes':
+                if not end in self.adjDict:
+                    self.adjDict[end] = [(start, float(distance))]
                 else:
-                    self.adjDict[start].append((end, float(distance)))
-
-                if not start in self.coords:
-                    self.coords[start] = (x, y)
+                    self.adjDict[end].append((start, float(distance)))
 
     def add_road(self, start: str, end: str, distance: float, one_way=False):
         if not start in self.adjDict:
