@@ -3,11 +3,12 @@ from pyrosm import OSM, get_data
 
 
 class RoadwayGraph:
-    def __init__(self, data):
+    def __init__(self, edgedata, nodedata):
         self.adjDict = {}
+        self.nodes = {}
 
-        for row in data:
-            _, _, _, _, lanes, _, maxspeed, name, oneway, _, _, _, _, _, _, _, _, _, start, end, distance = row
+        for row in edgedata:
+            oneway, start, end, distance = row
 
             if not start in self.adjDict:
                 self.adjDict[start] = [(end, float(distance))]
@@ -19,6 +20,12 @@ class RoadwayGraph:
                     self.adjDict[end] = [(start, float(distance))]
                 else:
                     self.adjDict[end].append((start, float(distance)))
+
+        for row in nodedata:
+            node_id, lon, lat = row
+
+            if not node_id in self.nodes:
+                self.nodes[int(node_id)] = (lon, lat)
 
     def add_road(self, start: str, end: str, distance: float, one_way=False):
         if not start in self.adjDict:
@@ -98,3 +105,17 @@ class RoadwayGraph:
             closed_list.add(n)
         
         return None
+
+
+if __name__ == "__main__":
+    pass
+    #get_data('new-york', directory='test-data')
+    #osm = OSM(get_data("new-york", directory="test-data"))
+    #nodes, edges = osm.get_network(nodes=True, network_type="driving")
+    
+    #data = edges[['oneway', 'u', 'v', 'length']].values
+
+    #graph = RoadwayGraph(data, nodes[['id', 'lon', 'lat']].values)
+    #print(graph.adjDict)
+    #print(graph.nodes)
+    #print(graph.shortest_path(36156596, 3730253796))
