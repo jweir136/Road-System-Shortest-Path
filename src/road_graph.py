@@ -1,5 +1,6 @@
 import csv
 from pyrosm import OSM, get_data
+import matplotlib.pyplot as plt
 
 
 class RoadwayGraph:
@@ -108,14 +109,7 @@ class RoadwayGraph:
 
 
 if __name__ == "__main__":
-    pass
-    #get_data('new-york', directory='test-data')
-    #osm = OSM(get_data("new-york", directory="test-data"))
-    #nodes, edges = osm.get_network(nodes=True, network_type="driving")
-    
-    #data = edges[['oneway', 'u', 'v', 'length']].values
+    osm = OSM('test-data/greenland-latest.osm.pbf')
+    nodes, edges = osm.get_network(nodes=True, network_type="driving")
 
-    #graph = RoadwayGraph(data, nodes[['id', 'lon', 'lat']].values)
-    #print(graph.adjDict)
-    #print(graph.nodes)
-    #print(graph.shortest_path(36156596, 3730253796))
+    print(edges.tail())
